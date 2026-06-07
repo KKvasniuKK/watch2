@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Clock Widget</title>
+
+<style>
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+    background:#191919;
+    font-family:Arial, Helvetica, sans-serif;
+    width:max-content;
+    padding:20px;
+}
+
+.clock{
+    display:flex;
+    align-items:center;
+    gap:14px;
+}
+
+.box{
+    width:100px;
+    height:100px;
+    background:#f4f4f4;
+    color:#111111;
+    border-radius:10px;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    font-size:68px;
+    font-weight:900;
+    box-shadow:0 5px 15px rgba(0,0,0,.2);
+}
+
+.separator{
+    color:#f4f4f4;
+    font-size:68px;
+    font-weight:900;
+}
+
+.theme-switch{
+    position:fixed;
+    right:15px;
+    bottom:15px;
+
+    display:flex;
+    align-items:center;
+    gap:10px;
+
+    background:rgba(255,255,255,.08);
+    backdrop-filter:blur(10px);
+
+    padding:10px 14px;
+    border-radius:12px;
+
+    color:white;
+    font-size:14px;
+}
+
+.switch{
+    position:relative;
+    width:50px;
+    height:26px;
+}
+
+.switch input{
+    display:none;
+}
+
+.slider{
+    position:absolute;
+    inset:0;
+    background:#666;
+    border-radius:999px;
+    cursor:pointer;
+}
+
+.slider::before{
+    content:"";
+    position:absolute;
+    width:20px;
+    height:20px;
+    top:3px;
+    left:3px;
+    background:white;
+    border-radius:50%;
+    transition:.25s;
+}
+
+.switch input:checked + .slider::before{
+    transform:translateX(24px);
+}
+
+body.light{
+    background:#f4f4f4;
+}
+
+body.light .box{
+    background:#1d1d1f;
+    color:white;
+}
+
+body.light .separator{
+    color:#1d1d1f;
+}
+
+body.light .theme-switch{
+    color:#111;
+    background:rgba(0,0,0,.08);
+}
+
+</style>
+</head>
+<body>
+
+<div class="clock">
+    <div class="box" id="hours">00</div>
+    <div class="separator">:</div>
+    <div class="box" id="minutes">00</div>
+    <div class="separator">:</div>
+    <div class="box" id="seconds">00</div>
+</div>
+
+<div class="theme-switch">
+    <span>Dark</span>
+
+    <label class="switch">
+        <input type="checkbox" id="themeToggle">
+        <span class="slider"></span>
+    </label>
+
+    <span>Light</span>
+</div>
+
+<script>
+
+function updateClock(){
+
+    const now = new Date();
+
+    document.getElementById("hours").textContent =
+        String(now.getHours()).padStart(2,'0');
+
+    document.getElementById("minutes").textContent =
+        String(now.getMinutes()).padStart(2,'0');
+
+    document.getElementById("seconds").textContent =
+        String(now.getSeconds()).padStart(2,'0');
+}
+
+updateClock();
+setInterval(updateClock,1000);
+
+const toggle = document.getElementById("themeToggle");
+
+toggle.addEventListener("change",()=>{
+
+    document.body.classList.toggle("light");
+
+});
+
+</script>
+
+</body>
+</html>
