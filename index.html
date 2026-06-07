@@ -18,19 +18,22 @@ body{
     font-family:Arial, Helvetica, sans-serif;
     width:max-content;
     padding:20px;
+    transition:.25s;
 }
 
 .clock{
     display:flex;
     align-items:center;
     gap:14px;
+    cursor:pointer;
+    user-select:none;
 }
 
 .box{
     width:100px;
     height:100px;
     background:#f4f4f4;
-    color:#111111;
+    color:#111;
     border-radius:10px;
     display:flex;
     justify-content:center;
@@ -38,66 +41,17 @@ body{
     font-size:68px;
     font-weight:900;
     box-shadow:0 5px 15px rgba(0,0,0,.2);
+    transition:.25s;
 }
 
 .separator{
     color:#f4f4f4;
     font-size:68px;
     font-weight:900;
-}
-
-.theme-switch{
-    position:fixed;
-    right:15px;
-    bottom:15px;
-
-    display:flex;
-    align-items:center;
-    gap:10px;
-
-    background:rgba(255,255,255,.08);
-    backdrop-filter:blur(10px);
-
-    padding:10px 14px;
-    border-radius:12px;
-
-    color:white;
-    font-size:14px;
-}
-
-.switch{
-    position:relative;
-    width:50px;
-    height:26px;
-}
-
-.switch input{
-    display:none;
-}
-
-.slider{
-    position:absolute;
-    inset:0;
-    background:#666;
-    border-radius:999px;
-    cursor:pointer;
-}
-
-.slider::before{
-    content:"";
-    position:absolute;
-    width:20px;
-    height:20px;
-    top:3px;
-    left:3px;
-    background:white;
-    border-radius:50%;
     transition:.25s;
 }
 
-.switch input:checked + .slider::before{
-    transform:translateX(24px);
-}
+/* Light Theme */
 
 body.light{
     background:#f4f4f4;
@@ -105,23 +59,18 @@ body.light{
 
 body.light .box{
     background:#1d1d1f;
-    color:white;
+    color:#fff;
 }
 
 body.light .separator{
     color:#1d1d1f;
 }
 
-body.light .theme-switch{
-    color:#111;
-    background:rgba(0,0,0,.08);
-}
-
 </style>
 </head>
 <body>
 
-<div class="clock">
+<div class="clock" id="clock">
     <div class="box" id="hours">00</div>
     <div class="separator">:</div>
     <div class="box" id="minutes">00</div>
@@ -129,18 +78,39 @@ body.light .theme-switch{
     <div class="box" id="seconds">00</div>
 </div>
 
-<div class="theme-switch">
-    <span>Dark</span>
-
-    <label class="switch">
-        <input type="checkbox" id="themeToggle">
-        <span class="slider"></span>
-    </label>
-
-    <span>Light</span>
-</div>
-
 <script>
+
+// ===== THEME =====
+
+const savedTheme = localStorage.getItem("theme");
+
+if(savedTheme){
+    if(savedTheme === "light"){
+        document.body.classList.add("light");
+    }
+}else{
+    const prefersLight =
+        window.matchMedia("(prefers-color-scheme: light)").matches;
+
+    if(prefersLight){
+        document.body.classList.add("light");
+    }
+}
+
+document.getElementById("clock").addEventListener("click",()=>{
+
+    document.body.classList.toggle("light");
+
+    localStorage.setItem(
+        "theme",
+        document.body.classList.contains("light")
+            ? "light"
+            : "dark"
+    );
+
+});
+
+// ===== CLOCK =====
 
 function updateClock(){
 
@@ -158,14 +128,6 @@ function updateClock(){
 
 updateClock();
 setInterval(updateClock,1000);
-
-const toggle = document.getElementById("themeToggle");
-
-toggle.addEventListener("change",()=>{
-
-    document.body.classList.toggle("light");
-
-});
 
 </script>
 
